@@ -37,13 +37,27 @@ def load_data_and_labels(positive_data_file,labels):
     x_text = positive_examples
     x_text = [clean_str(sent) for sent in x_text]
     # Generate labels
-    positive_labels = list(open(positive_data_file, "r", encoding='utf-8').readlines())
+    positive_labels = list(open(labels, "r", encoding='utf-8').readlines())
     for i in positive_labels:
         i=list(i.replace('\n',''))
     #negative_labels = [[1, 0] for _ in negative_examples]
     #y = np.concatenate([positive_labels, negative_labels], 0)
-    y=np.array(positive_labels)
-    return [x_text, y]
+    initial=[]
+    la=[]
+    for i in range(9294):
+        initial.append(0)
+    mapping=dict()
+    flag=0
+    for i in positive_labels:
+        if i not in mapping.keys():
+            mapping[i]=flag
+            flag+=1
+        temp = list(initial)
+        temp[mapping[i]] = 1
+        la.append(temp)
+    for i in positive_labels:
+        la.append(float(i))
+    return [x_text, la]
 
 
 def batch_iter(data, batch_size, num_epochs, shuffle=True):

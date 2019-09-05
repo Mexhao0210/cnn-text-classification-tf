@@ -18,7 +18,7 @@ tf.flags.DEFINE_string("positive_data_file", "./data/train_post", "Data source f
 tf.flags.DEFINE_string("negative_data_file", "./data/train_label", "Data source for the negative data.")
 
 # Model Hyperparameters
-tf.flags.DEFINE_integer("embedding_dim", 128, "Dimensionality of character embedding (default: 128)")
+tf.flags.DEFINE_integer("embedding_dim", 64, "Dimensionality of character embedding (default: 128)")
 tf.flags.DEFINE_string("filter_sizes", "3,4,5", "Comma-separated filter sizes (default: '3,4,5')")
 tf.flags.DEFINE_integer("num_filters", 128, "Number of filters per filter size (default: 128)")
 tf.flags.DEFINE_float("dropout_keep_prob", 0.5, "Dropout keep probability (default: 0.5)")
@@ -49,6 +49,8 @@ def preprocess():
     print("Loading data...")
     x_text, y = data_helpers.load_data_and_labels(FLAGS.positive_data_file, FLAGS.negative_data_file)
 
+    for i in y:
+        print(i)
     # Build vocabulary
     max_document_length = max([len(x.split(" ")) for x in x_text])
     print('length complete')
@@ -57,10 +59,12 @@ def preprocess():
     x = np.array(list(vocab_processor.fit_transform(x_text)))
 
     # Randomly shuffle data
-    np.random.seed(10)
-    shuffle_indices = np.random.permutation(np.arange(len(y)))
-    x_shuffled = x[shuffle_indices]
-    y_shuffled = y[shuffle_indices]
+    # np.random.seed(10)
+    # shuffle_indices = np.random.permutation(np.arange(len(y)))
+    # x_shuffled = x[shuffle_indices]
+    # y_shuffled = y[shuffle_indices]
+    x_shuffled=x
+    y_shuffled=y
 
     # Split train/test set
     # TODO: This is very crude, should use cross-validation
@@ -145,6 +149,8 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
                 """
                 A single training step
                 """
+                # for i in y_batch:
+                    # print(i)
                 feed_dict = {
                   cnn.input_x: x_batch,
                   cnn.input_y: y_batch,
@@ -192,6 +198,7 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
 
 def main(argv=None):
     x_train, y_train, vocab_processor, x_dev, y_dev = preprocess()
+
     train(x_train, y_train, vocab_processor, x_dev, y_dev)
 
 if __name__ == '__main__':
