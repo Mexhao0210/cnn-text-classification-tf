@@ -12,7 +12,7 @@ It is slightly simplified implementation of Kim's [Convolutional Neural Networks
 
 Print parameters:
 
-```bash
+```bashasdf
 ./train.py --help
 ```
 
