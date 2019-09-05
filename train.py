@@ -172,6 +172,8 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
                 time_str = datetime.datetime.now().isoformat()
                 print("{}: step {}, loss {:g}, acc {:g}".format(time_str, step, loss, accuracy))
                 train_summary_writer.add_summary(summaries, step)
+                for i in r:
+                    del i
                 del r[:]
 
             def dev_step(x_batch, y_batch, writer=None):
@@ -200,6 +202,8 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
                 print("{}: step {}, loss {:g}, acc {:g}".format(time_str, step, loss, accuracy))
                 if writer:
                     writer.add_summary(summaries, step)
+                for i in r:
+                    del i
                 del r[:]
 
             # Generate batches
