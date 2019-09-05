@@ -49,8 +49,8 @@ def preprocess():
     print("Loading data...")
     x_text, y = data_helpers.load_data_and_labels(FLAGS.positive_data_file, FLAGS.negative_data_file)
 
-    for i in y:
-        print(i)
+    # for i in y:
+    #     print(i)
     # Build vocabulary
     max_document_length = max([len(x.split(" ")) for x in x_text])
     print('length complete')
@@ -149,6 +149,16 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
                 """
                 A single training step
                 """
+                initial=[]
+                r=[]
+                for i in range(9294):
+                    initial.append(0)
+                for i in y_batch:
+                    temp=list(initial)
+                    temp[i]=float(1)
+                    r.append(temp)
+                y_batch=r
+                # print(y_batch)
                 # for i in y_batch:
                     # print(i)
                 feed_dict = {
@@ -167,6 +177,16 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
                 """
                 Evaluates model on a dev set
                 """
+                initial = []
+                r = []
+                for i in range(9294):
+                    initial.append(0)
+                for i in y_batch:
+                    temp = list(initial)
+                    temp[i] = float(1)
+                    r.append(temp)
+                y_batch = r
+                # print(y_batch)
                 feed_dict = {
                   cnn.input_x: x_batch,
                   cnn.input_y: y_batch,
