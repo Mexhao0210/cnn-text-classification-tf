@@ -14,8 +14,8 @@ from tensorflow.contrib import learn
 
 # Data loading params
 tf.flags.DEFINE_float("dev_sample_percentage", .1, "Percentage of the training data to use for validation")
-tf.flags.DEFINE_string("positive_data_file", "./data/rt-polaritydata/rt-polarity.pos", "Data source for the positive data.")
-tf.flags.DEFINE_string("negative_data_file", "./data/rt-polaritydata/rt-polarity.neg", "Data source for the negative data.")
+tf.flags.DEFINE_string("positive_data_file", "./data/train_post", "Data source for the positive data.")
+tf.flags.DEFINE_string("negative_data_file", "./data/train_label", "Data source for the negative data.")
 
 # Model Hyperparameters
 tf.flags.DEFINE_integer("embedding_dim", 128, "Dimensionality of character embedding (default: 128)")
@@ -25,7 +25,7 @@ tf.flags.DEFINE_float("dropout_keep_prob", 0.5, "Dropout keep probability (defau
 tf.flags.DEFINE_float("l2_reg_lambda", 0.0, "L2 regularization lambda (default: 0.0)")
 
 # Training parameters
-tf.flags.DEFINE_integer("batch_size", 64, "Batch Size (default: 64)")
+tf.flags.DEFINE_integer("batch_size", 128, "Batch Size (default: 64)")
 tf.flags.DEFINE_integer("num_epochs", 200, "Number of training epochs (default: 200)")
 tf.flags.DEFINE_integer("evaluate_every", 100, "Evaluate model on dev set after this many steps (default: 100)")
 tf.flags.DEFINE_integer("checkpoint_every", 100, "Save model after this many steps (default: 100)")
@@ -51,7 +51,9 @@ def preprocess():
 
     # Build vocabulary
     max_document_length = max([len(x.split(" ")) for x in x_text])
+    print('length complete')
     vocab_processor = learn.preprocessing.VocabularyProcessor(max_document_length)
+    print('vocab complete')
     x = np.array(list(vocab_processor.fit_transform(x_text)))
 
     # Randomly shuffle data
@@ -84,7 +86,7 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
         with sess.as_default():
             cnn = TextCNN(
                 sequence_length=x_train.shape[1],
-                num_classes=y_train.shape[1],
+                num_classes=9294,
                 vocab_size=len(vocab_processor.vocabulary_),
                 embedding_size=FLAGS.embedding_dim,
                 filter_sizes=list(map(int, FLAGS.filter_sizes.split(","))),
