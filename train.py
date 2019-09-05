@@ -59,12 +59,12 @@ def preprocess():
     x = np.array(list(vocab_processor.fit_transform(x_text)))
 
     # Randomly shuffle data
-    # np.random.seed(10)
-    # shuffle_indices = np.random.permutation(np.arange(len(y)))
-    # x_shuffled = x[shuffle_indices]
-    # y_shuffled = y[shuffle_indices]
-    x_shuffled=x
-    y_shuffled=y
+    np.random.seed(10)
+    shuffle_indices = np.random.permutation(np.arange(len(y)))
+    x_shuffled = x[shuffle_indices]
+    y_shuffled = y[shuffle_indices]
+    # x_shuffled=x
+    # y_shuffled=y
 
     # Split train/test set
     # TODO: This is very crude, should use cross-validation
@@ -172,6 +172,7 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
                 time_str = datetime.datetime.now().isoformat()
                 print("{}: step {}, loss {:g}, acc {:g}".format(time_str, step, loss, accuracy))
                 train_summary_writer.add_summary(summaries, step)
+                del r[:]
 
             def dev_step(x_batch, y_batch, writer=None):
                 """
@@ -199,6 +200,7 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
                 print("{}: step {}, loss {:g}, acc {:g}".format(time_str, step, loss, accuracy))
                 if writer:
                     writer.add_summary(summaries, step)
+                del r[:]
 
             # Generate batches
             batches = data_helpers.batch_iter(
