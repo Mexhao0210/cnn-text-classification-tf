@@ -61,10 +61,10 @@ def preprocess():
     # Randomly shuffle data
     np.random.seed(10)
     shuffle_indices = np.random.permutation(np.arange(len(y)))
-    x_shuffled = x[shuffle_indices]
-    y_shuffled = y[shuffle_indices]
-    # x_shuffled=x
-    # y_shuffled=y
+    #x_shuffled = x[shuffle_indices]
+    #y_shuffled = y[shuffle_indices]
+    x_shuffled=x
+    y_shuffled=y
 
     # Split train/test set
     # TODO: This is very crude, should use cross-validation
